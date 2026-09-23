@@ -46,28 +46,30 @@ opcao = st.radio("Menu de Ações:", ["🔍 Pesquisar Itens"], horizontal=True)
 if opcao == "🔍 Pesquisar Itens":
     st.subheader("Procurar no Stock")
     
-    # --- NOVO SISTEMA COM BOTÃO DE LIMPAR (✖) ---
-    # Inicializa a memória do texto de pesquisa se ela não existir
+    # 1. Função de callback que limpa o texto na memória de forma segura
+    def limpar_busca():
+        st.session_state.texto_pesquisa = ""
+
+    # Inicializa a chave na memória se ela não existir
     if "texto_pesquisa" not in st.session_state:
         st.session_state.texto_pesquisa = ""
 
-    # Criamos duas colunas: uma grande para o texto e uma minúscula para o botão de cruz
+    # Dividir a linha: Barra de pesquisa à esquerda, botão à direita
     col_input, col_botao = st.columns([0.85, 0.15])
     
     with col_input:
-        # A barra lê e grava o valor diretamente na memória da aplicação usando a key
+        # A barra de pesquisa usa a chave da memória
         search_query = st.text_input(
             "Escrever o nome do item ou categoria:", 
             key="texto_pesquisa"
         ).strip()
         
     with col_botao:
-        # Coloca um pequeno espaço no topo para alinhar verticalmente com a barra de escrita
+        # Alinhamento vertical com a barra de texto
         st.write("<div style='padding-top: 28px;'></div>", unsafe_allow_html=True)
-        # O botão com a cruz. Se for clicado, limpa a memória e força a página a recarregar
-        if st.button("✖", help="Limpar texto pesquisado", use_container_width=True):
-            st.session_state.texto_pesquisa = ""
-            st. his_rerun = st.rerun()
+        # CORREÇÃO: O botão agora chama a função 'limpar_busca' através do on_click
+        st.button("✖", help="Limpar texto pesquisado", on_click=limpar_busca, use_container_width=True)
+
 
     # Tratamento da coluna 'Caixa'
     if 'Caixa' in df.columns:

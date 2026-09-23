@@ -54,9 +54,8 @@ if opcao == "🔍 Pesquisar Itens":
     if "texto_pesquisa" not in st.session_state:
         st.session_state.texto_pesquisa = ""
 
-    # ALTERADO: Criamos as colunas com proporção ajustada (90% e 10%)
-    # e usamos a propriedade HTML para garantir que o botão não salta para baixo
-    col_input, col_botao = st.columns([0.88, 0.12])
+    # CORREÇÃO DEFINITIVA: vertical_alignment="end" força o alinhamento horizontal no telemóvel
+    col_input, col_botao = st.columns([0.88, 0.05], vertical_alignment="end")
     
     with col_input:
         search_query = st.text_input(
@@ -65,11 +64,8 @@ if opcao == "🔍 Pesquisar Itens":
         ).strip()
         
     with col_botao:
-        # Espaçamento vertical exato para alinhar com a barra no telemóvel e PC
-        st.write("<div style='padding-top: 28px;'></div>", unsafe_allow_html=True)
-        # O botão agora ocupa a largura exata da sua coluna pequena
+        # O botão agora fica perfeitamente alinhado ao lado da barra, sem precisar de códigos HTML de espaço
         st.button("✖", help="Limpar texto pesquisado", on_click=limpar_busca, use_container_width=True)
-
 
 
     # Tratamento da coluna 'Caixa'

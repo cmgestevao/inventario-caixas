@@ -50,9 +50,8 @@ if opcao == "🔍 Pesquisar Itens":
     search_query = st.text_input(
         "Escrever o nome do item ou categoria:", 
         type="search",
-        placeholder="Digite para buscar..."
+        placeholder="Procurar..."
     ).strip()
-
 
     # Tratamento da coluna 'Caixa'
     if 'Caixa' in df.columns:

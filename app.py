@@ -46,7 +46,7 @@ opcao = st.radio("Menu de Ações:", ["🔍 Pesquisar Itens"], horizontal=True)
 if opcao == "🔍 Pesquisar Itens":
     st.subheader("Procurar no Stock")
     
-    # 1. Função de callback que limpa o texto na memória de forma segura
+    # Função de callback que limpa o texto na memória de forma segura
     def limpar_busca():
         st.session_state.texto_pesquisa = ""
 
@@ -54,21 +54,22 @@ if opcao == "🔍 Pesquisar Itens":
     if "texto_pesquisa" not in st.session_state:
         st.session_state.texto_pesquisa = ""
 
-    # Dividir a linha: Barra de pesquisa à esquerda, botão à direita
-    col_input, col_botao = st.columns([0.85, 0.15])
+    # ALTERADO: Criamos as colunas com proporção ajustada (90% e 10%)
+    # e usamos a propriedade HTML para garantir que o botão não salta para baixo
+    col_input, col_botao = st.columns([0.88, 0.12])
     
     with col_input:
-        # A barra de pesquisa usa a chave da memória
         search_query = st.text_input(
             "Escrever o nome do item ou categoria:", 
             key="texto_pesquisa"
         ).strip()
         
     with col_botao:
-        # Alinhamento vertical com a barra de texto
+        # Espaçamento vertical exato para alinhar com a barra no telemóvel e PC
         st.write("<div style='padding-top: 28px;'></div>", unsafe_allow_html=True)
-        # CORREÇÃO: O botão agora chama a função 'limpar_busca' através do on_click
+        # O botão agora ocupa a largura exata da sua coluna pequena
         st.button("✖", help="Limpar texto pesquisado", on_click=limpar_busca, use_container_width=True)
+
 
 
     # Tratamento da coluna 'Caixa'

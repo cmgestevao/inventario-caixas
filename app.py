@@ -45,8 +45,30 @@ opcao = st.radio("Menu de Ações:", ["🔍 Pesquisar Itens"], horizontal=True)
 
 if opcao == "🔍 Pesquisar Itens":
     st.subheader("Procurar no Stock")
-    search_query = st.text_input("Escrever o nome do item ou categoria:", "").strip()
     
+    # --- NOVO SISTEMA COM BOTÃO DE LIMPAR (✖) ---
+    # Inicializa a memória do texto de pesquisa se ela não existir
+    if "texto_pesquisa" not in st.session_state:
+        st.session_state.texto_pesquisa = ""
+
+    # Criamos duas colunas: uma grande para o texto e uma minúscula para o botão de cruz
+    col_input, col_botao = st.columns([0.85, 0.15])
+    
+    with col_input:
+        # A barra lê e grava o valor diretamente na memória da aplicação usando a key
+        search_query = st.text_input(
+            "Escrever o nome do item ou categoria:", 
+            key="texto_pesquisa"
+        ).strip()
+        
+    with col_botao:
+        # Coloca um pequeno espaço no topo para alinhar verticalmente com a barra de escrita
+        st.write("<div style='padding-top: 28px;'></div>", unsafe_allow_html=True)
+        # O botão com a cruz. Se for clicado, limpa a memória e força a página a recarregar
+        if st.button("✖", help="Limpar texto pesquisado", use_container_width=True):
+            st.session_state.texto_pesquisa = ""
+            st. his_rerun = st.rerun()
+
     # Tratamento da coluna 'Caixa'
     if 'Caixa' in df.columns:
         df['Caixa'] = df['Caixa'].fillna('').astype(str).str.replace(r'\.0$', '', regex=True)

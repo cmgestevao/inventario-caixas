@@ -41,45 +41,44 @@ if 'Item' in df.columns:
     df = df.dropna(subset=['Item'])
     df = df[df['Item'].astype(str).str.strip() != '']
 
-opcao = st.radio("Menu de Ações:", ["🔍 Pesquisar Itens"], horizontal=True)
+# --- ZONA DE PESQUISA DIRETA (O Menu foi removido) ---
 
-if opcao == "🔍 Pesquisar Itens":
-    st.subheader("Procurar no Stock")
-    
-    # O parâmetro type="search" ativa a cruz de limpeza nativa do telemóvel/browser
-    search_query = st.text_input(
-        "Escrever o nome do item ou categoria:", 
-        type="search",
-        placeholder="Procurar..."
-    ).strip()
+st.subheader("Procurar no Stock")
 
-    # Tratamento da coluna 'Caixa'
-    if 'Caixa' in df.columns:
-        df['Caixa'] = df['Caixa'].fillna('').astype(str).str.replace(r'\.0$', '', regex=True)
-        caixas_disponiveis = ["Todas"] + sorted(list(df['Caixa'].dropna().unique()), key=lambda x: float(x) if str(x).replace('.','',1).isdigit() else 0)
-        caixa_selecionada = st.selectbox("Filtrar por Nº da Caixa:", caixas_disponiveis)
-    else:
-        caixa_selecionada = "Todas"
-        
-    df_filtrado = df.copy()
+# O parâmetro type="search" ativa a cruz de limpeza nativa do telemóvel/browser
+search_query = st.text_input(
+    "Escrever o nome do item ou categoria:", 
+    type="search",
+    placeholder="Procurar..."
+).strip()
+
+# Tratamento da coluna 'Caixa'
+if 'Caixa' in df.columns:
+    df['Caixa'] = df['Caixa'].fillna('').astype(str).str.replace(r'\.0$', '', regex=True)
+    caixas_disponiveis = ["Todas"] + sorted(list(df['Caixa'].dropna().unique()), key=lambda x: float(x) if str(x).replace('.','',1).isdigit() else 0)
+    caixa_selecionada = st.selectbox("Filtrar por Nº da Caixa:", caixas_disponiveis)
+else:
+    caixa_selecionada = "Todas"
     
-    if search_query:
-        mascara = df_filtrado.astype(str).apply(lambda x: x.str.contains(search_query, case=False)).any(axis=1)
-        df_filtrado = df_filtrado[mascara]
-        
-    if caixa_selecionada != "Todas" and 'Caixa' in df.columns:
-        df_filtrado = df_filtrado[df_filtrado['Caixa'] == caixa_selecionada]
-        
-    st.metric(label="Itens Ativos no Stock", value=len(df_filtrado))
+df_filtrado = df.copy()
+
+if search_query:
+    mascara = df_filtrado.astype(str).apply(lambda x: x.str.contains(search_query, case=False)).any(axis=1)
+    df_filtrado = df_filtrado[mascara]
     
-    # Mostrar a tabela com o alinhamento central nas 3 primeiras colunas
-    st.dataframe(
-        df_filtrado, 
-        use_container_width=True, 
-        hide_index=True,
-        column_config={
-            "Caixa": st.column_config.Column(alignment="center"),
-            "Vert": st.column_config.Column(alignment="center"),
-            "Horiz": st.column_config.Column(alignment="center")
-        }
-    )
+if caixa_selecionada != "Todas" and 'Caixa' in df.columns:
+    df_filtrado = df_filtrado[df_filtrado['Caixa'] == caixa_selecionada]
+    
+st.metric(label="Itens Ativos no Stock", value=len(df_filtrado))
+
+# Mostrar a tabela com o alinhamento central nas 3 primeiras colunas
+st.dataframe(
+    df_filtrado, 
+    use_container_width=True, 
+    hide_index=True,
+    column_config={
+        "Caixa": st.column_config.Column(alignment="center"),
+        "Vert": st.column_config.Column(alignment="center"),
+        "Horiz": st.column_config.Column(alignment="center")
+    }
+)

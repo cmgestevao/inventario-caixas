@@ -46,26 +46,12 @@ opcao = st.radio("Menu de Ações:", ["🔍 Pesquisar Itens"], horizontal=True)
 if opcao == "🔍 Pesquisar Itens":
     st.subheader("Procurar no Stock")
     
-    # Função de callback que limpa o texto na memória de forma segura
-    def limpar_busca():
-        st.session_state.texto_pesquisa = ""
-
-    # Inicializa a chave na memória se ela não existir
-    if "texto_pesquisa" not in st.session_state:
-        st.session_state.texto_pesquisa = ""
-
-    # CORREÇÃO DEFINITIVA: vertical_alignment="end" força o alinhamento horizontal no telemóvel
-    col_input, col_botao = st.columns([0.88, 0.05], vertical_alignment="end")
-    
-    with col_input:
-        search_query = st.text_input(
-            "Escrever o nome do item ou categoria:", 
-            key="texto_pesquisa"
-        ).strip()
-        
-    with col_botao:
-        # O botão agora fica perfeitamente alinhado ao lado da barra, sem precisar de códigos HTML de espaço
-        st.button("✖", help="Limpar texto pesquisado", on_click=limpar_busca, use_container_width=True)
+    # O parâmetro type="search" ativa a cruz de limpeza nativa do telemóvel/browser
+    search_query = st.text_input(
+        "Escrever o nome do item ou categoria:", 
+        type="search",
+        placeholder="Digite para buscar..."
+    ).strip()
 
 
     # Tratamento da coluna 'Caixa'
